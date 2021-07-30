@@ -1,0 +1,31 @@
+az vm create --resource-group bartelsmann-rg --name customImageVM --image UbuntuLTS --size Standard_B1ls --storage-sku Standard_LRS --admin-username azureuser --generate-ssh-keys
+
+# Install azure cli for acr access
+
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+ az vmss extension set --resource-group bartelsmann-rg --vmss-name my-vmss --name OmsAgentForLinux --publisher Microsoft.EnterpriseCloud.Monitoring --protected-settings '{\"workspaceKey\":\"cZoqvxhO4jGdF9Uc95iNk5SpW0Na3Fan4vBDwTEgIVK1/Ofhh+qx43rxdd1qMDGiub3Za/HpoXlP5e4On/Zvng==\"}' --settings '{\"workspaceId\":\"33b0ae7a-dad6-4ace-a5bd-561e17e133ac\"}'
+
+ az vmss extension set --resource-group bartelsmann-rg --vmss-name my-vmss --name AzureMonitorLinuxAgent --publisher Microsoft.Azure.Monitor
+
+ az vm image accept terms --urn cognosys:docker-community-edition-with-ubuntu-20-04-lts:docker-community-edition-with-ubuntu-20-04-lts:1.2019.0714
+
+  az vm create --resource-group bartelsmann-rg --name customImageVM --image  cognosys:docker-community-edition-with-ubuntu-20-04-lts:docker-community-edition-with-ubuntu-20-04-lts:1.2019.0714 --size Standard_B1ls --storage-sku Standard_LRS --admin-username azureuser --generate-ssh-keys
+  
+ cognosys:docker-community-edition-with-ubuntu-20-04-lts:docker-community-edition-with-ubuntu-20-04-lts:1.2019.0714
+
+
+ az vm deallocate --resource-group bartelsmann-rg --name customImageVM
+
+az vm generalize --resource-group bartelsmann-rg --name customImageVM
+
+az image create --resource-group bartelsmann-rg --name vmssImage --source customImageVM
+
+# image id: /subscriptions/31ef2f62-0bbe-4030-848d-2d916510b804/resourceGroups/bartelsmann-rg/providers/Microsoft.Compute/disks/customImageVM_OsDisk_1_5785308822b3421d843dddb47f0b6c78
+
+
+"plan": {
+                "name": "docker-community-edition-with-ubuntu-20-04-lts",
+                "product": "docker-community-edition-with-ubuntu-20-04-lts",
+                "publisher": "cognosys"
+            }

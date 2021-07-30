@@ -1,0 +1,4 @@
+{
+  "fileUris": ["https://raw.githubusercontent.com/udoyen/azure-voting-app-redis/Deploy_to_VMSS/flask.sh"],
+  "commandToExecute": "./flask.sh"
+}

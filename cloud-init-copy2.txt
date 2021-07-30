@@ -1,0 +1,30 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - python3
+  - python-pip
+  - python3-pip
+  - redis-server
+  - nginx 
+write_files:
+  - owner: www-data:www-data
+    path: /etc/nginx/sites-available/default
+    content: |
+      server {
+        listen 80;
+        access_log /var/log/nginx/flask.log;
+        location / {
+          proxy_pass http://localhost:5000;
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection keep-alive;
+          proxy_set_header Host $host;
+          proxy_cache_bypass $http_upgrade;
+        }
+      }
+
+runcmd:
+  - sed -i.bak 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
+  - service redis restart
+  - apt update
+  - pip3 install --upgrade pip
